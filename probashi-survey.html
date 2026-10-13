@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>প্রবাসীদের টাকা পাঠানোর জরিপ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#10201c;--sub:#566a65;--bg:#eef5f2;--card:#fff;--soft:#f4f9f7;--line:#cfdfd9;--brand:#0b6b57;--brand-d:#08503f;--on:#fff;--tint:#dcf1ea;--hi:#f5b800;--err:#b3261e}
+@media (prefers-color-scheme:dark){:root{--ink:#e7f2ee;--sub:#9db4ad;--bg:#0b1513;--card:#122320;--soft:#0e1c19;--line:#25423b;--brand:#3fc9a6;--brand-d:#2fae8d;--on:#06201a;--tint:#14352d;--err:#ff8a80}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hind Siliguri',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.55}
+header{background:var(--brand);color:var(--on);padding:calc(28px + env(safe-area-inset-top)) 20px 56px}
+@media (prefers-color-scheme:dark){header{background:#0f2b25;color:#e7f2ee}}
+.wrap{max-width:680px;margin:0 auto}
+h1{margin:0 0 10px;font-size:clamp(25px,6vw,34px);line-height:1.25;font-weight:700}
+header p{margin:0;max-width:52ch;opacity:.95}
+.pill{display:inline-block;margin-top:16px;padding:6px 14px;border-radius:99px;background:rgba(255,255,255,.18);font-size:14px;font-weight:500}
+main{max-width:680px;margin:-30px auto 0;padding:0 14px calc(48px + env(safe-area-inset-bottom))}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 18px 6px;margin-bottom:14px}
+h2{margin:0 0 4px;font-size:19px;font-weight:700;color:var(--brand)}
+.lead{margin:0 0 6px;color:var(--sub);font-size:15px}
+.q{display:block;font-weight:600;margin:20px 0 4px}
+.help{display:block;font-weight:400;color:var(--sub);font-size:14px;line-height:1.45;margin-bottom:8px}
+.req{color:var(--err)}
+.fld{margin-bottom:6px}
+input[type=text],input[type=email],input[type=tel],input[type=number],textarea,.sel,.cbtn{width:100%;font:inherit;color:var(--ink);background:var(--soft);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;min-height:50px;transition:border-color .15s}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus,.sel:focus,.cbtn:focus-visible,button:focus-visible{outline:3px solid var(--hi);outline-offset:1px;border-color:var(--brand)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.row{grid-template-columns:1fr}}
+
+/* custom native-select arrow */
+.selw{position:relative}
+.sel{appearance:none;-webkit-appearance:none;padding-right:44px;cursor:pointer}
+.selw::after,.cbtn::after{content:"";position:absolute;right:16px;top:50%;width:9px;height:9px;margin-top:-7px;border-right:2.5px solid var(--brand);border-bottom:2.5px solid var(--brand);transform:rotate(45deg);pointer-events:none;transition:transform .15s}
+
+
+/* searchable dropdown */
+.cb{position:relative}
+.cbtn{position:relative;text-align:left;cursor:pointer;display:block;padding-right:44px}
+.cbtn.ph .val{color:var(--sub)}
+.cb.open .cbtn{border-color:var(--brand)}
+.cb.open .cbtn::after{transform:rotate(225deg);margin-top:-2px}
+.panel{display:none;position:absolute;z-index:20;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1.5px solid var(--brand);border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.18);overflow:hidden}
+.cb.open .panel{display:block}
+.srch{position:relative;padding:10px;border-bottom:1.5px solid var(--line);background:var(--card)}
+.srch input{display:block;width:100%;min-height:48px;padding:0 14px 0 46px;font:inherit;color:var(--ink);background:var(--soft);border:1.5px solid var(--line);border-radius:12px;-webkit-appearance:none;appearance:none}
+.srch input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--tint)}
+.srch input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.srch::before{content:"";position:absolute;left:26px;top:50%;width:11px;height:11px;margin-top:-8px;border:2.5px solid var(--sub);border-radius:50%;pointer-events:none}
+.srch::after{content:"";position:absolute;left:38px;top:50%;width:2.5px;height:7px;margin-top:3px;background:var(--sub);border-radius:2px;transform:rotate(-45deg);pointer-events:none}
+.fl{display:inline-block;flex:none;width:28px;height:20px;object-fit:cover;border-radius:4px;box-shadow:0 0 0 1px var(--line)}
+.fl.ph0{box-shadow:none}
+.cbtn .fl{margin-right:10px;vertical-align:-4px}
+.panel ul{list-style:none;margin:0;padding:6px;max-height:min(280px,50vh);overflow:auto;overscroll-behavior:contain}
+.panel li{padding:11px 12px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.panel li .t{flex:1}
+.panel li small{color:var(--sub)}
+.panel li:hover{background:var(--tint)}
+.panel li.sel-on{font-weight:700;color:var(--brand)}
+.panel .grp{padding:8px 12px 4px;font-size:13px;color:var(--sub);font-weight:600;cursor:default}
+.panel .grp:hover{background:none}
+.panel .none{padding:14px;color:var(--sub);cursor:default}
+
+/* custom check / radio cards */
+.opts{display:grid;gap:10px}
+.opt{position:relative;display:flex;gap:13px;align-items:flex-start;padding:13px 14px;background:var(--soft);border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.mark{flex:none;width:24px;height:24px;margin-top:2px;border:2px solid var(--line);border-radius:7px;background:var(--card);display:grid;place-items:center;transition:all .15s}
+.opt.r .mark{border-radius:50%}
+.mark::after{content:"";width:6px;height:11px;border-right:3px solid var(--on);border-bottom:3px solid var(--on);transform:rotate(45deg) scale(0);margin-top:-2px;transition:transform .15s}
+.opt.r .mark::after{width:10px;height:10px;border:0;border-radius:50%;background:var(--on);margin:0}
+.opt input:checked~.mark{background:var(--brand);border-color:var(--brand)}
+.opt input:checked~.mark::after{transform:rotate(45deg) scale(1)}
+.opt.r input:checked~.mark::after{transform:scale(1)}
+.opt:has(input:checked){border-color:var(--brand);background:var(--tint)}
+.opt input:focus-visible~.mark{outline:3px solid var(--hi);outline-offset:2px}
+.opt b{display:block;font-weight:600;line-height:1.35}
+.opt small{display:block;color:var(--sub);font-size:14px;line-height:1.4;margin-top:2px}
+.opt.sm{padding:11px 14px;align-items:center}
+.opt.sm .mark{margin-top:0}
+button.go{width:100%;min-height:56px;font:inherit;font-weight:700;font-size:18px;color:var(--on);background:var(--brand);border:0;border-radius:14px;cursor:pointer;margin-top:6px}
+button.go:active{background:var(--brand-d)}
+button.go:disabled{opacity:.6}
+.msg{display:none;padding:14px 16px;border-radius:12px;margin:12px 0;font-weight:500}
+.msg.ok{display:block;background:var(--tint);color:var(--brand);border:1.5px solid var(--brand)}
+.msg.bad{display:block;background:rgba(179,38,30,.09);color:var(--err);border:1.5px solid var(--err)}
+.foot{text-align:center;color:var(--sub);font-size:14px;margin-top:14px}
+.err-f{border-color:var(--err)!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>প্রবাসীরা কীভাবে দেশে টাকা পাঠান?</h1>
+<p>আমরা একটি ছোট জরিপ করছি। দেখছি প্রবাসী ভাইবোনদের জন্য ভালো কিছু করা যায় কি না। আপনার অভিজ্ঞতা আমাদের জানতে সাহায্য করবে।</p>
+<span class="pill">সময় লাগবে ৩–৫ মিনিট · কোনো ভুল উত্তর নেই</span>
+</div></header>
+
+<main>
+<form id="f" novalidate>
+
+<section>
+<h2>আপনার পরিচয়</h2>
+<p class="lead">যোগাযোগের জন্য দরকার হতে পারে। অন্য কাউকে দেওয়া হবে না।</p>
+<div class="fld"><label class="q" for="name">আপনার নাম <span class="req">*</span></label>
+<input type="text" id="name" autocomplete="name"></div>
+<div class="row">
+<div class="fld"><label class="q" for="wa">হোয়াটসঅ্যাপ নম্বর <span class="req">*</span><span class="help">দেশের কোডসহ লিখুন, যেমন +966…</span></label>
+<input type="tel" id="wa" inputmode="tel" autocomplete="tel" placeholder="+"></div>
+<div class="fld"><label class="q" for="email">ইমেইল<span class="help">না থাকলে ফাঁকা রাখুন</span></label>
+<input type="email" id="email" inputmode="email" autocomplete="email"></div>
+</div>
+<span class="q">এখন কোন দেশে থাকেন? <span class="req">*</span></span>
+<div class="cb fld" id="cbCountry" data-ph="দেশ বেছে নিন"></div>
+
+<label class="q" for="years">কত বছর ধরে প্রবাসে আছেন?</label>
+<div class="selw fld"><select class="sel" id="years"><option value="">বেছে নিন</option><option>১ বছরের কম</option><option>১–৩ বছর</option><option>৩–৭ বছর</option><option>৭ বছরের বেশি</option></select></div>
+
+<label class="q" for="job">আপনি কী কাজ করেন?</label>
+<div class="selw fld"><select class="sel" id="job"><option value="">বেছে নিন</option><option>কারখানা / ফ্যাক্টরি</option><option>নির্মাণ কাজ</option><option>দোকান / রেস্টুরেন্ট / সুপারশপ</option><option>ড্রাইভার / ডেলিভারি</option><option>পরিচ্ছন্নতা / গৃহকর্ম</option><option>অফিস / চাকরিজীবী</option><option>নিজের ব্যবসা</option><option>শিক্ষার্থী</option><option>অন্য কিছু</option></select></div>
+</section>
+
+<section>
+<h2>টাকা পাঠানোর পদ্ধতি</h2>
+<p class="lead">দেশে পরিবারের কাছে টাকা পাঠাতে আপনি কোন উপায় ব্যবহার করেন?</p>
+<span class="q">যা যা ব্যবহার করেন সবগুলো বেছে নিন <span class="req">*</span></span>
+<div class="opts">
+<label class="opt"><input type="checkbox" name="method" value="bank"><span class="mark"></span><span><b>ব্যাংকের মাধ্যমে</b><small>আপনার বা পরিবারের ব্যাংক অ্যাকাউন্টে সরাসরি পাঠানো</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="exchange"><span class="mark"></span><span><b>এক্সচেঞ্জ হাউস / কাউন্টারে গিয়ে</b><small>দোকান বা শাখায় গিয়ে নগদ টাকা দিয়ে পাঠানো। যেমন Al Rajhi, Western Union, Enjaz, UAE Exchange</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="app"><span class="mark"></span><span><b>মোবাইল অ্যাপ থেকে</b><small>ফোনের অ্যাপ দিয়ে ঘরে বসে পাঠানো। যেমন STC Pay, Wise, Remitly, WorldRemit, Botim</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="wallet"><span class="mark"></span><span><b>বিকাশ / নগদ / রকেটে সরাসরি</b><small>পরিবারের মোবাইল নম্বরে টাকা চলে যায়</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="friend"><span class="mark"></span><span><b>পরিচিত কারও হাতে</b><small>বন্ধু বা আত্মীয় দেশে গেলে তার হাত দিয়ে</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="agent"><span class="mark"></span><span><b>পরিচিত এজেন্ট বা দালালের মাধ্যমে</b><small>আপনি এখানে টাকা দেন, তিনি দেশে পরিবারকে দেন</small></span></label>
+<label class="opt"><input type="checkbox" name="method" value="other"><span class="mark"></span><span><b>অন্য কোনো উপায়</b></span></label>
+</div>
+<label class="q" for="service">যে সার্ভিস, অ্যাপ বা এক্সচেঞ্জের নাম ব্যবহার করেন<span class="help">মনে না থাকলে ফাঁকা রাখুন</span></label>
+<input type="text" id="service" placeholder="যেমন: Al Rajhi, STC Pay, bKash">
+<div style="height:14px"></div>
+</section>
+
+<section>
+<h2>কত টাকা, কতবার</h2>
+<span class="q">মাসে কতবার টাকা পাঠান? <span class="req">*</span></span>
+<div class="opts" style="grid-template-columns:repeat(2,1fr)">
+<label class="opt r sm"><input type="radio" name="freq" value="1"><span class="mark"></span><b>১ বার</b></label>
+<label class="opt r sm"><input type="radio" name="freq" value="2"><span class="mark"></span><b>২ বার</b></label>
+<label class="opt r sm"><input type="radio" name="freq" value="3"><span class="mark"></span><b>৩ বার</b></label>
+<label class="opt r sm"><input type="radio" name="freq" value="4+"><span class="mark"></span><b>৪ বা বেশি</b></label>
+</div>
+<span class="q">কোন মুদ্রায় পাঠান? <span class="req">*</span><span class="help">আপনি যে দেশে থাকেন, সেখানকার টাকা। যেমন সৌদিতে রিয়াল, দুবাইতে দিরহাম</span></span>
+<div class="cb fld" id="cbCur" data-ph="মুদ্রা বেছে নিন"></div>
+<label class="q" for="amount">একবারে গড়ে কত পাঠান?<span class="help">ওপরে যে মুদ্রা বেছেছেন, সেই মুদ্রায় সংখ্যা লিখুন। যেমন ১০০০ রিয়াল হলে লিখুন 1000</span></label>
+<input type="number" id="amount" min="0" inputmode="decimal" placeholder="যেমন: 1000">
+<div style="height:14px"></div>
+</section>
+
+<section>
+<h2>খরচ ও অভিজ্ঞতা</h2>
+<label class="q" for="fee">একবার পাঠাতে আলাদা ফি কত লাগে?<span class="help">ফি মানে পাঠানোর সময় সার্ভিস যত টাকা কেটে রাখে। একই মুদ্রায় লিখুন। জানা না থাকলে ফাঁকা রাখুন</span></label>
+<input type="number" id="fee" min="0" inputmode="decimal" placeholder="যেমন: 15">
+<span class="q">দেশে টাকা পৌঁছাতে কতক্ষণ লাগে?</span>
+<div class="opts">
+<label class="opt r sm"><input type="radio" name="time" value="minutes"><span class="mark"></span><b>কয়েক মিনিট</b></label>
+<label class="opt r sm"><input type="radio" name="time" value="hours"><span class="mark"></span><b>কয়েক ঘণ্টা</b></label>
+<label class="opt r sm"><input type="radio" name="time" value="1day"><span class="mark"></span><b>১ দিন</b></label>
+<label class="opt r sm"><input type="radio" name="time" value="2-3days"><span class="mark"></span><b>২–৩ দিন বা বেশি</b></label>
+</div>
+<span class="q">রেট নিয়ে কেমন লাগে?<span class="help">রেট মানে ১ রিয়াল/দিরহাম/ডলারের বদলে দেশে কত টাকা পান</span></span>
+<div class="opts">
+<label class="opt r sm"><input type="radio" name="rate" value="good"><span class="mark"></span><b>ভালো রেট পাই</b></label>
+<label class="opt r sm"><input type="radio" name="rate" value="ok"><span class="mark"></span><b>মোটামুটি</b></label>
+<label class="opt r sm"><input type="radio" name="rate" value="bad"><span class="mark"></span><b>কম রেট পাই, মন খারাপ হয়</b></label>
+<label class="opt r sm"><input type="radio" name="rate" value="dk"><span class="mark"></span><b>বুঝি না</b></label>
+</div>
+<span class="q">কোন সমস্যাগুলো হয়? <span class="help">যেগুলো আপনার সঙ্গে ঘটে সেগুলো বেছে নিন</span></span>
+<div class="opts">
+<label class="opt sm"><input type="checkbox" name="problem" value="high_fee"><span class="mark"></span><b>ফি অনেক বেশি</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="bad_rate"><span class="mark"></span><b>দর কম দেয়</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="slow"><span class="mark"></span><b>টাকা পৌঁছাতে দেরি হয়</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="far"><span class="mark"></span><b>কাউন্টারে যেতে অনেক দূর যেতে হয়</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="language"><span class="mark"></span><b>অ্যাপ বুঝতে কষ্ট হয়</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="trust"><span class="mark"></span><b>ঠকে যাওয়ার ভয় লাগে</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="docs"><span class="mark"></span><b>কাগজপত্র / আইডি নিয়ে ঝামেলা</b></label>
+<label class="opt sm"><input type="checkbox" name="problem" value="none"><span class="mark"></span><b>তেমন কোনো সমস্যা নেই</b></label>
+</div>
+<span class="q">বৈধ পথে (ব্যাংক বা অনুমোদিত সার্ভিস) টাকা পাঠালে সরকার নগদ প্রণোদনা দেয়। এটা কি জানেন?</span>
+<div class="opts">
+<label class="opt r sm"><input type="radio" name="incentive" value="get"><span class="mark"></span><b>জানি, আমি পাই</b></label>
+<label class="opt r sm"><input type="radio" name="incentive" value="no_get"><span class="mark"></span><b>জানি, কিন্তু পাই না</b></label>
+<label class="opt r sm"><input type="radio" name="incentive" value="unaware"><span class="mark"></span><b>জানি না</b></label>
+</div>
+<div style="height:14px"></div>
+</section>
+
+<section>
+<h2>আপনার মতামত</h2>
+<span class="q">টাকা পাঠানোর বিষয়ে কোন সুবিধা পেলে আপনার সবচেয়ে ভালো হতো? <span class="help">যতগুলো দরকার সব বেছে নিন</span></span>
+<div class="opts">
+<label class="opt sm"><input type="checkbox" name="want" value="low_fee"><span class="mark"></span><b>কম ফি বা ফি ছাড়া</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="rate"><span class="mark"></span><b>ভালো রেট</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="fast"><span class="mark"></span><b>সঙ্গে সঙ্গে টাকা পৌঁছানো</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="wallet"><span class="mark"></span><b>বিকাশ / নগদে সহজে পাঠানো</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="bangla"><span class="mark"></span><b>বাংলায় সহজ অ্যাপ</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="home"><span class="mark"></span><b>ঘরে বসে পাঠানো</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="safe"><span class="mark"></span><b>নিরাপত্তা ও বিশ্বাস</b></label>
+<label class="opt sm"><input type="checkbox" name="want" value="support"><span class="mark"></span><b>বাংলায় সাহায্য পাওয়া</b></label>
+</div>
+<span class="q">ভালো ও সহজ নতুন কোনো সার্ভিস এলে আপনি কি দেখতে চাইবেন?</span>
+<div class="opts">
+<label class="opt r sm"><input type="radio" name="interest" value="yes"><span class="mark"></span><b>হ্যাঁ, চাইব</b></label>
+<label class="opt r sm"><input type="radio" name="interest" value="maybe"><span class="mark"></span><b>আগে জানব, তারপর ঠিক করব</b></label>
+<label class="opt r sm"><input type="radio" name="interest" value="no"><span class="mark"></span><b>না, এখনকার উপায়েই ঠিক আছে</b></label>
+</div>
+<label class="q" for="note">আর কিছু বলার থাকলে লিখুন<span class="help">আপনার কষ্ট বা পরামর্শ আমাদের জানাতে পারেন</span></label>
+<textarea id="note"></textarea>
+<label class="opt sm" style="margin:18px 0 16px"><input type="checkbox" id="consent"><span class="mark"></span><span><b>আমি রাজি</b><small>আমার দেওয়া তথ্য গবেষণা এবং যোগাযোগের জন্য ব্যবহার করা যাবে</small></span></label>
+</section>
+
+<div id="msg" class="msg" role="status" aria-live="polite"></div>
+<button type="submit" class="go" id="btn">উত্তর জমা দিন</button>
+<p class="foot">আপনার সময় দেওয়ার জন্য ধন্যবাদ</p>
+</form>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// ===== নিজের Firebase config এখানে বসান (Firebase Console > Project settings > Your apps) =====
+const firebaseConfig = {
+  apiKey: "AIzaSyCceQ7umBKnXiMyurnrsQfOB1HZy6nNeNk",
+  authDomain: "probashi-data-collect.firebaseapp.com",
+  projectId: "probashi-data-collect",
+  storageBucket: "probashi-data-collect.firebasestorage.app",
+  messagingSenderId: "498662093722",
+  appId: "1:498662093722:web:60974fb4ff0c862c38c023"
+};
+const COLLECTION = "survey_responses";
+// ===========================================================================================
+
+const $ = id => document.getElementById(id);
+const checked = n => [...document.querySelectorAll(`input[name=${n}]:checked`)].map(x => x.value);
+const radio = n => (document.querySelector(`input[name=${n}]:checked`) || {}).value || '';
+const num = id => $(id).value === '' ? null : Number($(id).value);
+const msg = (t, c) => { const m = $('msg'); m.textContent = t; m.className = 'msg ' + c; m.scrollIntoView({behavior:'smooth', block:'center'}); };
+
+const COUNTRIES = `sa|সৌদি আরব|Saudi Arabia
+ae|সংযুক্ত আরব আমিরাত|United Arab Emirates UAE Dubai
+qa|কাতার|Qatar
+kw|কুয়েত|Kuwait
+om|ওমান|Oman
+bh|বাহরাইন|Bahrain
+my|মালয়েশিয়া|Malaysia
+sg|সিঙ্গাপুর|Singapore
+it|ইতালি|Italy
+gb|যুক্তরাজ্য|United Kingdom UK England
+us|যুক্তরাষ্ট্র|United States USA America
+ca|কানাডা|Canada
+jo|জর্ডান|Jordan
+lb|লেবানন|Lebanon
+kr|দক্ষিণ কোরিয়া|South Korea
+jp|জাপান|Japan
+au|অস্ট্রেলিয়া|Australia
+mv|মালদ্বীপ|Maldives
+bn|ব্রুনেই|Brunei
+es|স্পেন|Spain
+fr|ফ্রান্স|France
+de|জার্মানি|Germany
+gr|গ্রিস|Greece
+pt|পর্তুগাল|Portugal
+at|অস্ট্রিয়া|Austria
+is|আইসল্যান্ড|Iceland
+az|আজারবাইজান|Azerbaijan
+af|আফগানিস্তান|Afghanistan
+ar|আর্জেন্টিনা|Argentina
+am|আর্মেনিয়া|Armenia
+dz|আলজেরিয়া|Algeria
+al|আলবেনিয়া|Albania
+ua|ইউক্রেন|Ukraine
+ec|ইকুয়েডর|Ecuador
+id|ইন্দোনেশিয়া|Indonesia
+iq|ইরাক|Iraq
+ir|ইরান|Iran
+il|ইসরায়েল|Israel
+et|ইথিওপিয়া|Ethiopia
+ug|উগান্ডা|Uganda
+uz|উজবেকিস্তান|Uzbekistan
+uy|উরুগুয়ে|Uruguay
+ee|এস্তোনিয়া|Estonia
+gh|ঘানা|Ghana
+cg|কঙ্গো|Congo
+kh|কম্বোডিয়া|Cambodia
+ke|কেনিয়া|Kenya
+cu|কিউবা|Cuba
+kg|কিরগিজস্তান|Kyrgyzstan
+kz|কাজাখস্তান|Kazakhstan
+cr|কোস্টা রিকা|Costa Rica
+hr|ক্রোয়েশিয়া|Croatia
+cm|ক্যামেরুন|Cameroon
+gm|গাম্বিয়া|Gambia
+gn|গিনি|Guinea
+td|চাদ|Chad
+cl|চিলি|Chile
+cn|চীন|China
+cz|চেক প্রজাতন্ত্র|Czech Republic Czechia
+ge|জর্জিয়া|Georgia
+zm|জাম্বিয়া|Zambia
+zw|জিম্বাবুয়ে|Zimbabwe
+dj|জিবুতি|Djibouti
+tg|টোগো|Togo
+tn|তিউনিসিয়া|Tunisia
+dk|ডেনমার্ক|Denmark
+tw|তাইওয়ান|Taiwan
+tz|তানজানিয়া|Tanzania
+tr|তুরস্ক|Turkey Turkiye
+tm|তুর্কমেনিস্তান|Turkmenistan
+th|থাইল্যান্ড|Thailand
+za|দক্ষিণ আফ্রিকা|South Africa
+no|নরওয়ে|Norway
+ne|নাইজার|Niger
+ng|নাইজেরিয়া|Nigeria
+na|নামিবিয়া|Namibia
+nz|নিউজিল্যান্ড|New Zealand
+nl|নেদারল্যান্ডস|Netherlands Holland
+np|নেপাল|Nepal
+pk|পাকিস্তান|Pakistan
+pa|পানামা|Panama
+pe|পেরু|Peru
+pl|পোল্যান্ড|Poland
+fj|ফিজি|Fiji
+fi|ফিনল্যান্ড|Finland
+ph|ফিলিপাইন|Philippines
+ps|ফিলিস্তিন|Palestine
+ba|বসনিয়া ও হার্জেগোভিনা|Bosnia and Herzegovina
+bw|বতসোয়ানা|Botswana
+bo|বলিভিয়া|Bolivia
+bg|বুলগেরিয়া|Bulgaria
+be|বেলজিয়াম|Belgium
+by|বেলারুশ|Belarus
+br|ব্রাজিল|Brazil
+in|ভারত|India
+vn|ভিয়েতনাম|Vietnam
+bt|ভুটান|Bhutan
+ma|মরক্কো|Morocco
+mu|মরিশাস|Mauritius
+md|মলদোভা|Moldova
+mm|মায়ানমার|Myanmar Burma
+mt|মাল্টা|Malta
+ml|মালি|Mali
+eg|মিশর|Egypt
+mx|মেক্সিকো|Mexico
+mn|মঙ্গোলিয়া|Mongolia
+mz|মোজাম্বিক|Mozambique
+mo|ম্যাকাও|Macau
+ru|রাশিয়া|Russia
+ro|রোমানিয়া|Romania
+rw|রুয়ান্ডা|Rwanda
+la|লাওস|Laos
+lv|লাটভিয়া|Latvia
+lt|লিথুয়ানিয়া|Lithuania
+ly|লিবিয়া|Libya
+lu|লুক্সেমবার্গ|Luxembourg
+lk|শ্রীলঙ্কা|Sri Lanka
+cy|সাইপ্রাস|Cyprus
+rs|সার্বিয়া|Serbia
+sd|সুদান|Sudan
+se|সুইডেন|Sweden
+ch|সুইজারল্যান্ড|Switzerland
+sn|সেনেগাল|Senegal
+sc|সেশেলস|Seychelles
+sy|সিরিয়া|Syria
+sl|সিয়েরা লিওন|Sierra Leone
+sk|স্লোভাকিয়া|Slovakia
+si|স্লোভেনিয়া|Slovenia
+so|সোমালিয়া|Somalia
+hk|হংকং|Hong Kong
+hu|হাঙ্গেরি|Hungary
+ht|হাইতি|Haiti
+hn|হন্ডুরাস|Honduras
+ye|ইয়েমেন|Yemen
+ie|আয়ারল্যান্ড|Ireland
+co|কলম্বিয়া|Colombia
+ve|ভেনেজুয়েলা|Venezuela
+|অন্য কোনো দেশ|Other country`.split('\n').map(l => { const [code, bn, en] = l.split('|'); return {code, bn, en}; });
+
+const CURRENCIES = `SAR|সৌদি রিয়াল|Saudi Riyal|sa
+AED|আমিরাতি দিরহাম|UAE Dirham|ae
+QAR|কাতারি রিয়াল|Qatari Riyal|qa
+KWD|কুয়েতি দিনার|Kuwaiti Dinar|kw
+OMR|ওমানি রিয়াল|Omani Rial|om
+BHD|বাহরাইনি দিনার|Bahraini Dinar|bh
+MYR|মালয়েশিয়ান রিঙ্গিত|Malaysian Ringgit|my
+SGD|সিঙ্গাপুর ডলার|Singapore Dollar|sg
+USD|মার্কিন ডলার|US Dollar|us
+GBP|ব্রিটিশ পাউন্ড|British Pound Sterling|gb
+EUR|ইউরো|Euro|eu
+CAD|কানাডিয়ান ডলার|Canadian Dollar|ca
+AUD|অস্ট্রেলিয়ান ডলার|Australian Dollar|au
+JPY|জাপানি ইয়েন|Japanese Yen|jp
+KRW|কোরিয়ান ওন|South Korean Won|kr
+JOD|জর্ডানিয়ান দিনার|Jordanian Dinar|jo
+LBP|লেবানিজ পাউন্ড|Lebanese Pound|lb
+BND|ব্রুনেই ডলার|Brunei Dollar|bn
+MVR|মালদ্বীপ রুফিয়া|Maldivian Rufiyaa|mv
+ALL|আলবেনিয়ান লেক|Albanian Lek|al
+AMD|আর্মেনিয়ান ড্রাম|Armenian Dram|am
+ARS|আর্জেন্টাইন পেসো|Argentine Peso|ar
+AZN|আজারবাইজানি মানাত|Azerbaijani Manat|az
+BGN|বুলগেরিয়ান লেভ|Bulgarian Lev|bg
+BRL|ব্রাজিলিয়ান রিয়াল|Brazilian Real|br
+BWP|বতসোয়ানা পুলা|Botswana Pula|bw
+CHF|সুইস ফ্র্যাঙ্ক|Swiss Franc|ch
+CLP|চিলিয়ান পেসো|Chilean Peso|cl
+CNY|চীনা ইউয়ান|Chinese Yuan Renminbi|cn
+COP|কলম্বিয়ান পেসো|Colombian Peso|co
+CZK|চেক কোরুনা|Czech Koruna|cz
+DKK|ডেনিশ ক্রোনার|Danish Krone|dk
+DZD|আলজেরিয়ান দিনার|Algerian Dinar|dz
+EGP|মিশরীয় পাউন্ড|Egyptian Pound|eg
+ETB|ইথিওপিয়ান বির|Ethiopian Birr|et
+FJD|ফিজি ডলার|Fijian Dollar|fj
+GEL|জর্জিয়ান লারি|Georgian Lari|ge
+GHS|ঘানার সেডি|Ghanaian Cedi|gh
+HKD|হংকং ডলার|Hong Kong Dollar|hk
+HUF|হাঙ্গেরিয়ান ফোরিন্ট|Hungarian Forint|hu
+IDR|ইন্দোনেশিয়ান রুপিয়া|Indonesian Rupiah|id
+ILS|ইসরায়েলি শেকেল|Israeli Shekel|il
+INR|ভারতীয় রুপি|Indian Rupee|in
+IQD|ইরাকি দিনার|Iraqi Dinar|iq
+IRR|ইরানি রিয়াল|Iranian Rial|ir
+KES|কেনিয়ান শিলিং|Kenyan Shilling|ke
+KHR|কম্বোডিয়ান রিয়েল|Cambodian Riel|kh
+KZT|কাজাখ টেঙ্গে|Kazakhstani Tenge|kz
+LAK|লাও কিপ|Lao Kip|la
+LKR|শ্রীলঙ্কান রুপি|Sri Lankan Rupee|lk
+LYD|লিবিয়ান দিনার|Libyan Dinar|ly
+MAD|মরক্কান দিরহাম|Moroccan Dirham|ma
+MMK|মায়ানমার কিয়াত|Myanmar Kyat|mm
+MUR|মরিশাস রুপি|Mauritian Rupee|mu
+MXN|মেক্সিকান পেসো|Mexican Peso|mx
+NGN|নাইজেরিয়ান নাইরা|Nigerian Naira|ng
+NOK|নরওয়েজিয়ান ক্রোনার|Norwegian Krone|no
+NPR|নেপালি রুপি|Nepalese Rupee|np
+NZD|নিউজিল্যান্ড ডলার|New Zealand Dollar|nz
+PEN|পেরুভিয়ান সল|Peruvian Sol|pe
+PHP|ফিলিপাইন পেসো|Philippine Peso|ph
+PKR|পাকিস্তানি রুপি|Pakistani Rupee|pk
+PLN|পোলিশ জ্লটি|Polish Zloty|pl
+RON|রোমানিয়ান লিউ|Romanian Leu|ro
+RSD|সার্বিয়ান দিনার|Serbian Dinar|rs
+RUB|রুশ রুবল|Russian Ruble|ru
+SEK|সুইডিশ ক্রোনা|Swedish Krona|se
+SYP|সিরিয়ান পাউন্ড|Syrian Pound|sy
+THB|থাই বাথ|Thai Baht|th
+TND|তিউনিসিয়ান দিনার|Tunisian Dinar|tn
+TRY|তুর্কি লিরা|Turkish Lira|tr
+TWD|তাইওয়ান ডলার|New Taiwan Dollar|tw
+TZS|তানজানিয়ান শিলিং|Tanzanian Shilling|tz
+UAH|ইউক্রেনীয় রিভনিয়া|Ukrainian Hryvnia|ua
+UGX|উগান্ডান শিলিং|Ugandan Shilling|ug
+UZS|উজবেক সোম|Uzbekistani Som|uz
+VND|ভিয়েতনামি ডং|Vietnamese Dong|vn
+XAF|মধ্য আফ্রিকান ফ্র্যাঙ্ক|Central African CFA Franc|
+XOF|পশ্চিম আফ্রিকান ফ্র্যাঙ্ক|West African CFA Franc|
+YER|ইয়েমেনি রিয়াল|Yemeni Rial|ye
+ZAR|দক্ষিণ আফ্রিকান র‍্যান্ড|South African Rand|za
+ZMW|জাম্বিয়ান কোয়াচা|Zambian Kwacha|zm
+OTHER|অন্য কোনো মুদ্রা|Other currency|`.split('\n').map(l => { const [code, bn, en, flag] = l.split('|'); return {code, bn, en, flag}; });
+
+/* searchable dropdown with flags + English/Bangla search */
+const flagHTML = c => c ? `<img class="fl" src="https://flagcdn.com/w40/${c}.png" alt="" loading="lazy" width="28" height="20" onerror="this.style.visibility='hidden'">` : '<span class="fl ph0"></span>';
+const esc = t => String(t).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+function combo(root, groups){
+  const ph = root.dataset.ph;
+  root.innerHTML = '<button type="button" class="cbtn ph" aria-haspopup="listbox"><span class="val"></span></button><div class="panel"><div class="srch"><input type="search" placeholder="খুঁজুন: বাংলা বা English (যেমন: sau, দুবাই, ringgit)" aria-label="খুঁজুন" autocomplete="off" autocapitalize="off" spellcheck="false"></div><ul role="listbox"></ul></div>';
+  const btn = root.querySelector('.cbtn'), val = root.querySelector('.val'), inp = root.querySelector('input'), ul = root.querySelector('ul');
+  const state = {value:null, item:null};
+  val.textContent = ph;
+  const all = groups.flatMap(g => g.items);
+  const li = i => `<li role="option" data-i="${all.indexOf(i)}" class="${state.value===i.value?'sel-on':''}">${flagHTML(i.flag)}<span class="t">${esc(i.label)}</span><small>${esc(i.sub)}</small></li>`;
+  function render(q){
+    q = q.trim().toLowerCase();
+    if (!q){ ul.innerHTML = groups.map(g => `<li class="grp">${g.title}</li>` + g.items.map(li).join('')).join(''); return; }
+    const hits = all.filter(i => i.keys.includes(q)).sort((a,b) => (b.keys.split(' ').some(w=>w.startsWith(q)) - a.keys.split(' ').some(w=>w.startsWith(q))));
+    ul.innerHTML = hits.length ? hits.map(li).join('') : '<li class="none">কিছু পাওয়া যায়নি। অন্য বানানে লিখে দেখুন।</li>';
+    ul.scrollTop = 0;
+  }
+  function toggle(o){
+    root.classList.toggle('open', o);
+    if (o){ inp.value = ''; render(''); if (matchMedia('(pointer:fine)').matches) setTimeout(() => inp.focus({preventScroll:true}), 30); }
+  }
+  function pick(i){
+    state.value = i.value; state.item = i.raw;
+    val.innerHTML = flagHTML(i.flag) + '<span>' + esc(i.label) + (i.sub && i.raw.code && i.raw.flag !== undefined ? ' <small style="color:var(--sub)">' + esc(i.sub) + '</small>' : '') + '</span>';
+    btn.classList.remove('ph','err-f'); toggle(false);
+  }
+  btn.onclick = () => toggle(!root.classList.contains('open'));
+  inp.oninput = () => render(inp.value);
+  inp.onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); const f = ul.querySelector('li[data-i]'); if (f) pick(all[+f.dataset.i]); } };
+  ul.onclick = e => { const l = e.target.closest('li[data-i]'); if (l) pick(all[+l.dataset.i]); };
+  document.addEventListener('click', e => { if (!root.contains(e.target)) root.classList.remove('open'); });
+  root.addEventListener('keydown', e => { if (e.key === 'Escape') toggle(false); });
+  root._reset = () => { state.value = null; state.item = null; val.textContent = ph; btn.classList.add('ph'); };
+  render('');
+  return state;
+}
+const cItem = c => ({value:c.en+'|'+c.code, label:c.bn, sub:c.en.split(' ').slice(0,3).join(' '), flag:c.code, raw:c, keys:(c.bn+' '+c.en+' '+c.code).toLowerCase()});
+const kItem = c => ({value:c.code, label:c.bn, sub:c.code, flag:c.flag, raw:c, keys:(c.bn+' '+c.en+' '+c.code).toLowerCase()});
+const countryState = combo($('cbCountry'), [
+  {title:'যেসব দেশে বেশি প্রবাসী থাকেন', items: COUNTRIES.slice(0,24).map(cItem)},
+  {title:'অন্যান্য দেশ', items: COUNTRIES.slice(24).map(cItem)}
+]);
+const curState = combo($('cbCur'), [
+  {title:'বেশি ব্যবহৃত', items: CURRENCIES.slice(0,19).map(kItem)},
+  {title:'অন্যান্য মুদ্রা', items: CURRENCIES.slice(19).map(kItem)}
+]);
+
+/* firebase */
+let db = null;
+try { if (!firebaseConfig.apiKey.startsWith('YOUR_')) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); } } catch (e) { console.error(e); }
+
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  document.querySelectorAll('.err-f').forEach(x => x.classList.remove('err-f'));
+  const bad = [];
+  if (!$('name').value.trim()) bad.push($('name'));
+  if (!$('wa').value.trim()) bad.push($('wa'));
+  if (!countryState.value) bad.push($('cbCountry').querySelector('.cbtn'));
+  if (!curState.value) bad.push($('cbCur').querySelector('.cbtn'));
+  if (bad.length){ bad.forEach(x => x.classList.add('err-f')); bad[0].scrollIntoView({behavior:'smooth',block:'center'}); return msg('লাল দাগ দেওয়া ঘরগুলো পূরণ করুন (নাম, হোয়াটসঅ্যাপ, দেশ, মুদ্রা)।', 'bad'); }
+  if (!checked('method').length) return msg('টাকা পাঠানোর অন্তত একটি পদ্ধতি বেছে নিন।', 'bad');
+  if (!radio('freq')) return msg('মাসে কতবার পাঠান সেটি বেছে নিন।', 'bad');
+  if (!$('consent').checked) return msg('জমা দিতে "আমি রাজি" ঘরে টিক দিন।', 'bad');
+  if (!db) return msg('Firebase সেটআপ হয়নি। ফাইলের ভেতরে firebaseConfig বসান।', 'bad');
+
+  const data = {
+    name: $('name').value.trim(), whatsapp: $('wa').value.trim(), email: $('email').value.trim(),
+    countryBn: countryState.item.bn, countryEn: countryState.item.en, countryCode: countryState.item.code, yearsAbroad: $('years').value, job: $('job').value,
+    methods: checked('method'), service: $('service').value.trim(),
+    timesPerMonth: radio('freq'), currency: curState.item.code, currencyName: curState.item.en, avgAmount: num('amount'),
+    feePerTransfer: num('fee'), transferTime: radio('time'), rateFeeling: radio('rate'),
+    problems: checked('problem'), incentiveAware: radio('incentive'),
+    wants: checked('want'), interest: radio('interest'), note: $('note').value.trim(),
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  $('btn').disabled = true; $('btn').textContent = 'জমা হচ্ছে…';
+  try {
+    await db.collection(COLLECTION).add(data);
+    $('f').reset();
+    $('cbCountry')._reset(); $('cbCur')._reset();
+    msg('ধন্যবাদ! আপনার উত্তর জমা হয়েছে।', 'ok');
+  } catch (err) { console.error(err); msg('জমা হয়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'bad'); }
+  finally { $('btn').disabled = false; $('btn').textContent = 'উত্তর জমা দিন'; }
+});
+</script>
+</body>
+</html>
